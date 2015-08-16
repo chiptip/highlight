@@ -109,6 +109,11 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "assets"),
 )
 
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "content")
+MEDIA_URL = "/content/"
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
