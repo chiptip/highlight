@@ -5,6 +5,9 @@ from rest_framework import status, mixins, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 # Create your views here.
 class VideoList(mixins.ListModelMixin,
