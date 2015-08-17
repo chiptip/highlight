@@ -1,7 +1,10 @@
 from __future__ import unicode_literals
 from cStringIO import StringIO
 from highlight.settings import MEDIA_ROOT
+from moviepy.editor import VideoFileClip, concatenate
 import logging
+import matplotlib.pyplot as plt
+import numpy as np # for numerical operations
 import os
 import sys
 import youtube_dl
@@ -11,6 +14,9 @@ logger = logging.getLogger(__name__)
 
 ORIG_VIDEO_DIR = "original"
 ORIG_VIDEO_PATH = os.path.join(MEDIA_ROOT, ORIG_VIDEO_DIR)
+ORIG_VOLUME_DIR = "original_volume"
+ORIG_VOLUME_PATH = os.path.join(MEDIA_ROOT, ORIG_VOLUME_DIR)
+
 
 
 class Capturing(list):
@@ -58,5 +64,41 @@ def download_video(url):
         'title': title,
         'thumbnail_url': thumbnail_url,
         'duration': duration,
-        'filename': filename
+        'video': os.path.join(ORIG_VIDEO_DIR,
+                              os.path.basename(filename))
     }
+
+
+def analyze_video(video_filename):
+    video_fullpath = os.path.join(ORIG_VIDEO_PATH,
+                                  os.path.basename(video_filename))
+    clip = VideoFileClip(video_fullpath)
+    cut = lambda i: clip.audio.subclip(i,i+1).to_soundarray(fps=22000)
+    volume = lambda array: np.sqrt(((1.0*array)**2).mean())
+    volumes = [volume(cut(i)) for i in range(0,int(clip.duration-1))]
+    averaged_volumes = np.array([sum(volumes[i:i+10])/10 for i in range(len(volumes)-10)])
+    # increases = np.diff(averaged_volumes)[:-1]>=0
+    # decreases = np.diff(averaged_volumes)[1:]<=0
+    # peaks_times = (increases * decreases).nonzero()[0]
+    # peaks_vols = averaged_volumes[peaks_times]
+    # peaks_times = peaks_times[peaks_vols>np.percentile(peaks_vols,90)]
+    frames = range(0,int(clip.duration-1))
+    plt.plot(frames, volumes)
+    plt.xlabel("frames")
+    plt.ylabel("volumes")
+    image_filename = '%s.png' % os.path.basename(video_filename)[:-4]
+    image_fullpath = os.path.join(ORIG_VOLUME_PATH, image_filename)
+    image_relpath = os.path.join(ORIG_VOLUME_DIR, image_filename)
+    try:
+        logger.debug("image_fullpath: [%s]" % image_fullpath)
+        plt.savefig(image_fullpath, transparent=True)
+    except Exception, ex:
+        logger.error("Failed to save image: [%s]" % image_fullpath)
+        raise ex
+    return image_relpath
+
+
+def process_video(url):
+    meta_data = download_video(url)
+    meta_data['image'] = analyze_video(meta_data['video'])
+    return meta_data

@@ -1,5 +1,5 @@
-from core.process import download_video, ORIG_VIDEO_DIR,\
-                         ORIG_VIDEO_DIR
+from core.process import process_video, ORIG_VIDEO_DIR,\
+                         ORIG_VOLUME_DIR
 from django.core.files import File
 from django.db import models
 import logging
@@ -14,14 +14,15 @@ class VideoManager(models.Manager):
 
         # do something with the video
         logger.debug("Downloading URL: %s" % source_url)
-        meta = download_video(source_url)
+        meta = process_video(source_url)
 
         # actual instantiate the video object
         video = Video(title=meta['title'],
                       source_url=source_url,
                       duration=meta['duration'],
                       thumbnail_url=meta['thumbnail_url'])
-        video.video.name = meta['filename']
+        video.video.name = meta['video']
+        video.image.name = meta['image']
         video.save()
         return video
 
@@ -33,7 +34,7 @@ class Video(models.Model):
     thumbnail_url = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
     video = models.FileField(upload_to=ORIG_VIDEO_DIR)
-
+    image = models.FileField(upload_to=ORIG_VOLUME_DIR)
     objects = VideoManager()
 
     class Meta:

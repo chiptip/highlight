@@ -3,4 +3,4 @@ djangorestframework==3.2.2
 youtube-dl==2015.08.09
 numpy==1.9.2
 moviepy==0.2.2.11
-
+matplotlib==1.4.3
