@@ -1,3 +1,4 @@
 *.pyc
 content/
+db.sqlite3
 
