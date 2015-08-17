@@ -27,16 +27,17 @@
 
 <div class="container-fluid main" ng-app="videoApp">
     <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <form>
+        <div class="col-md-6 col-md-offset-3" ng-controller="VideoUploadCtrl">
+            <form ng-submit="upload();">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="inputUrl" placeholder="Youtube URL">
+                    <input type="text" ng-model="sourceUrl" class="form-control" id="inputUrl" placeholder="Youtube URL" tabindex="1" ng-keyup="$event.keyCode == 13 ? myFunc() : null">
+                    <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;" tabindex="-1" />
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="row" ng-controller="ListController" ng-init="init();">
+    <div class="row" ng-controller="VideoListCtrl" ng-init="init();">
         {% verbatim %}
         <div class="col-md-6 col-md-offset-3">
             <div class="list-group" ng-repeat="video in videos">
@@ -44,10 +45,10 @@
                 <div class="col-md-9">
                     <h4 class="list-group-item-heading">{{ video.title }}</h4>
                     <p class="list-group-item-text">downloaded: {{ video.created | date:"MM/dd/yyyy 'at' h:mma" }}</p>
-                    <p class="list-group-item-text">duration: {{ video.duration }} secs</p>
+                    <p class="list-group-item-text">duration: {{ video.duration }}</p>
                 </div>
                 <div class="col-md-3">
-                    <img class="thumbnail" src="{{ video.thumbnail_url }}" />
+                    <img class="thumbnail" ng-src="{{ video.thumbnail_url }}" />
                 </div>
               </a>
             </div>
@@ -62,20 +63,61 @@
 <script type="text/javascript">
     var videoApp = angular.module('videoApp',[]);
 
-    videoApp.controller('ListController', function ($scope, $http, $window){
 
-        $scope.videos = [];
+    videoApp.service('videoService', function () {
+        var my_videos = [];
+        return {
+            videos: function() { return my_videos; },
+            addVideo: function(video) { my_videos.unshift(video); },
+            addVideos: function(videos) {
+                for(var i=0; i<videos.length; i++){
+                    my_videos.push(videos[i]);
+                }
+            }
+        };
+    });
+
+    videoApp.controller('VideoListCtrl', ['$scope', 'videoService', '$http', function ($scope, videoService, $http){
+
+        $scope.videos = videoService.videos();
 
         $scope.init = function() {
             $http.get('api/videos/').
                 then(function(response) {
-                    $scope.videos = response.data;
+                    videoService.addVideos(response.data);
                     console.log("videos fetch successful");
                 }, function(response) {
                     console.log(response);
                 });
-            console.log("Controller initialized");
+            console.log("VideoListCtrl init");
         };
-    });
+    }]);
+
+    videoApp.controller('VideoUploadCtrl', ['$scope', 'videoService', '$http', function ($scope, videoService, $http){
+
+        $scope.sourceUrl = null;
+
+        function startUpload(){
+            console.log("Upload started");
+        }
+
+        function stopUpload(){
+            console.log("Upload stopped");
+            $scope.sourceUrl = null;
+        }
+
+        $scope.upload = function() {
+            console.log("uploading " + $scope.sourceUrl);
+            $http.post('api/videos/', {source_url: $scope.sourceUrl}).
+                then(function(response) {
+                    startUpload();
+                    videoService.addVideo(response.data);
+                    stopUpload();
+                }, function(response) {
+                    console.log(response);
+                });
+        };
+
+    }]);
 </script>
 {% endblock inline_js %}

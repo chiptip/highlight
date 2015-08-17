@@ -29,7 +29,7 @@ class VideoManager(models.Manager):
 class Video(models.Model):
     title = models.CharField(max_length=100)
     source_url = models.CharField(max_length=255)
-    duration = models.IntegerField()
+    duration = models.CharField(max_length=10)
     thumbnail_url = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
     video = models.FileField(upload_to=ORIG_VIDEO_DIR)
