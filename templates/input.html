@@ -9,29 +9,73 @@
     margin-top: 120px;
 }
 
+.thumbnail {
+    width:      120px;
+    margin-bottom: 0;
+}
+
+.list-group .row {
+    margin-left:        0;
+    margin-right:       0;
+}
+
 </style>
 
 {% endblock header %}
 
 {% block body %}
 
-<div class="container-fluid main">
-    <form>
-        <div class="form-group">
-
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-
+<div class="container-fluid main" ng-app="videoApp">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form>
+                <div class="form-group">
                     <input type="text" class="form-control" id="inputUrl" placeholder="Youtube URL">
-
                 </div>
-            </div>
-
+            </form>
         </div>
-    </form>
+    </div>
 
-    {% block inline_js %}
-    <script src="{% static "js/vendor/angular.min.js" %}"></script>
-    {% endblock inline_js %}
+    <div class="row" ng-controller="ListController" ng-init="init();">
+        {% verbatim %}
+        <div class="col-md-6 col-md-offset-3">
+            <div class="list-group" ng-repeat="video in videos">
+              <div class="row list-group-item">
+                <div class="col-md-9">
+                    <h4 class="list-group-item-heading">{{ video.title }}</h4>
+                    <p class="list-group-item-text">downloaded: {{ video.created | date:"MM/dd/yyyy 'at' h:mma" }}</p>
+                    <p class="list-group-item-text">duration: {{ video.duration }} secs</p>
+                </div>
+                <div class="col-md-3">
+                    <img class="thumbnail" src="{{ video.thumbnail_url }}" />
+                </div>
+              </a>
+            </div>
+        </div>
+        {% endverbatim %}
+    </div>
 </div>
 {% endblock body %}
+
+{% block inline_js %}
+<script src="{% static "js/vendor/angular.min.js" %}"></script>
+<script type="text/javascript">
+    var videoApp = angular.module('videoApp',[]);
+
+    videoApp.controller('ListController', function ($scope, $http, $window){
+
+        $scope.videos = [];
+
+        $scope.init = function() {
+            $http.get('api/videos/').
+                then(function(response) {
+                    $scope.videos = response.data;
+                    console.log("videos fetch successful");
+                }, function(response) {
+                    console.log(response);
+                });
+            console.log("Controller initialized");
+        };
+    });
+</script>
+{% endblock inline_js %}

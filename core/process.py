@@ -35,7 +35,11 @@ def download_video(url):
     opts = {
         'restrictfilenames': True,
         'outtmpl': ORIG_VIDEO_PATH + "/%(title)s.%(ext)s",
-        'forcefilename': True
+        'forcefilename': True,
+        'forcetitle': True,
+        'forcethumbnail': True,
+        'forceduration': True,
+        # 'forcedescription': True
     }
 
     # capture stdout into list of strings
@@ -44,6 +48,15 @@ def download_video(url):
             ydl.download([url])
 
     # it should always be this element, if wrong, then need to loop
-    filename = output[5]
-    logger.debug('downloaded filename: [%s]' % filename)
-    return filename
+    # import pdb; pdb.set_trace()
+    title = output[5]
+    thumbnail_url = output[6]
+    filename = output[7]
+    duration = output[8]
+    logger.debug('downloaded [%s] filename: [%s]' % (title, filename))
+    return {
+        'title': title,
+        'thumbnail_url': thumbnail_url,
+        'duration': duration,
+        'filename': filename
+    }

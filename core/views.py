@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-class VideoList(mixins.ListModelMixin,
+class ApiVideoList(mixins.ListModelMixin,
                 mixins.CreateModelMixin,
                 generics.GenericAPIView):
     """
@@ -26,7 +26,7 @@ class VideoList(mixins.ListModelMixin,
         return self.create(request, *args, **kwargs)
 
 
-class VideoDetail(mixins.RetrieveModelMixin,
+class ApiVideoDetail(mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin,
                   mixins.DestroyModelMixin,
                   generics.GenericAPIView):
