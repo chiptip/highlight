@@ -1,12 +1,10 @@
-from core.process import video_download
+from core.process import download_video, ORIG_VIDEO_DIR,\
+                         ORIG_VIDEO_DIR
+from django.core.files import File
 from django.db import models
-from highlight.settings import MEDIA_ROOT
 import logging
-import os
 
 logger = logging.getLogger(__name__)
-ORIG_VIDEO_DIR = "original"
-ORIG_VIDEO_PATH = os.path.join(MEDIA_ROOT, ORIG_VIDEO_DIR)
 
 
 # Create your models here.
@@ -16,12 +14,12 @@ class VideoManager(models.Manager):
 
         # do something with the video
         logger.debug("Downloading URL: %s" % source_url)
-        video_download(source_url)
+        filename = download_video(source_url)
 
         # actual instantiate the video object
         video = Video(source_url=source_url)
+        video.video.name = filename
         video.save()
-
         return video
 
 
