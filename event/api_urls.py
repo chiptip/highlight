@@ -14,14 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
 from django.conf.urls import include, url
-from django.contrib import admin
 from django.views.generic import TemplateView
-from django.conf.urls.static import static
-from highlight import settings
+from rest_framework.urlpatterns import format_suffix_patterns
+from event import views
 
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='input.html')),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^api/events/', include('event.api_urls')),
-    url(r'^api/videos/', include('core.api_urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    url(r'^$', views.ApiEventList.as_view()),
+    url(r'^add$', views.ApiEventDetail.as_view()),
+]
+
+urlpatterns = format_suffix_patterns(urlpatterns)
