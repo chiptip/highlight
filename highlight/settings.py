@@ -135,3 +135,7 @@ LOGGING = {
     },
 }
 
+try:
+    from highlight.settings_local import *
+except ImportError:
+    pass
