@@ -1,4 +1,5 @@
 *.pyc
 content/
 db.sqlite3
+highlight/settings_local.py
 
