@@ -14,3 +14,7 @@ To start with developer mode:
 * login
 * persit saved url
 * change icon color
+
+## credit:
+
+* https://github.com/rmtuckerphx/AngularChromeEx/blob/master/manifest.json

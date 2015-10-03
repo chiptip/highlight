@@ -7,13 +7,8 @@ ouibaApp.service('pageInfoService', function() {
             {
                 model.title = tabs[0].title;
                 model.url = tabs[0].url;
-
                 callback(model);
-                chrome.tabs.sendMessage(tabs[0].id, { 'action': 'PageInfo' }, function (response) {
-                    // callback(model);
-                });
             }
-
         });
     };
 });
