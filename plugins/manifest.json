@@ -18,10 +18,7 @@
     "default_icon": "img/icon19.png",
     "default_title": "Click to scrape event",
     "default_popup": "popup.html"
-  }
-  // "permissions": [
-  //   "http://*/*"
-  // ],
+  },
   // "content_scripts": [
   //   {
   //     "matches": [
@@ -40,4 +37,12 @@
   //     ]
   //   }
   // ]
+  "content_scripts": [
+    {
+      "matches": [ "*://*/*" ],
+      "js": [ "js/src/content.js" ],
+      "run_at": "document_start"
+    }
+  ],
+  "permissions": [ "http://*/*", "https://*/*", "tabs" ]
 }

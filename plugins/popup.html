@@ -1,29 +1,23 @@
 <!doctype html>
-<style type="text/css">
-  #mainPopup {
-    padding: 10px;
-    height: 200px;
-    width: 400px;
-    font-family: Helvetica, Ubuntu, Arial, sans-serif;
-  }
-  h1 {
-    font-size: 2em;
-  }
-</style>
-
-<div id="mainPopup">
-    <h1>Hello from Ouiba!</h1>
-    <p>
-      <div>to do list</div>
-      <ul>
-        <li>capture url</li>
-        <li>make api call</li>
-        <li>login</li>
-        <li>persit saved url</li>
-        <li>change icon color</li>
-      </ul>
-    </p>
-</div>
-
-<script src="js/angular/angular.min.js"></script>
-
+<html ng-app="OuibaApp" ng-csp>
+  <head>
+    <link rel="stylesheet" href="css/popup.css">
+  </head>
+  <body>
+    <div id="mainPopup" ng-controller="PageController">
+        <div>{{message}}</div>
+        <h2>Page:</h2>
+        <div>Title: {{title}}</div>
+        <div>Url: {{url}}</div>
+<!--         <h2>Has Links:</h2>
+        <ul>
+            <li ng-repeat="pageInfo in pageInfos">
+                <div>{{pageInfo.url}}</div>
+            </li>
+        </ul> -->
+    </div>
+    <script src="js/lib/angular/angular.min.js"></script>
+    <script src="js/src/app.js"></script>
+    <script src="js/src/popup.js"></script>
+  </body>
+</html>
