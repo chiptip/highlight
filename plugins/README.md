@@ -1,19 +1,16 @@
 Chrome - plugin
 ===============
 
-To start with developer mode:
+## To start with developer mode:
 
 1. in chrome, go to settings
 1. load unpacked extensions, select the plugin folder
 
+## to pack the extension
 
-## to do list
+1. in chrome, go to settings
+2. select "package extension" option
 
-* ~~capture url~~
-* make api call
-* login
-* persit saved url
-* change icon color
 
 ## credit:
 
