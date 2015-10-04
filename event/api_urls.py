@@ -20,7 +20,7 @@ from event import views
 
 urlpatterns = [
     url(r'^$', views.ApiEventList.as_view()),
-    url(r'^add$', views.ApiEventDetail.as_view()),
+    url(r'^(?P<pk>[0-9]+)/$', views.ApiEventDetail.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
