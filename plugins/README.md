@@ -9,7 +9,7 @@ To start with developer mode:
 
 ## to do list
 
-* capture url
+* ~~capture url~~
 * make api call
 * login
 * persit saved url
