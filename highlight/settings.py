@@ -135,6 +135,11 @@ LOGGING = {
     },
 }
 
+FETCHER_BACKEND = 'event.fetch.RequestsAdapter'
+
+
+
+
 try:
     from highlight.settings_local import *
 except ImportError:
